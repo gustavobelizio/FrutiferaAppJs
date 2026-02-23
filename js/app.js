@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
         fruteiras.forEach(criarCard);
     }
 
-    // 🔥 AQUI ESTÁ A DIFERENÇA
     botaoSalvar.addEventListener("click", function (e) {
 
         e.preventDefault(); // impede reload
