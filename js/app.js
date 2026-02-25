@@ -1,16 +1,19 @@
-
+// Executa o código somente após o HTML estar totalmente carregado
 document.addEventListener("DOMContentLoaded", function () {
 
     const botaoSalvar = document.querySelector("#formFruteira button[type='submit']");
     const lista = document.getElementById("listaFruteiras");
 
+    // Verifica se os elementos principais existem antes de continuar
     if (!botaoSalvar || !lista) {
         console.error("Botão ou lista não encontrados.");
         return;
     }
 
+    // Recupera dados salvos no navegador ou inicia array vazio
     let fruteiras = JSON.parse(localStorage.getItem("fruteiras")) || [];
 
+    // Calcula idade da fruteira em meses a partir da data de plantio
     function calcularIdadeEmMeses(dataPlantio) {
         const hoje = new Date();
         const plantio = new Date(dataPlantio);
@@ -21,10 +24,12 @@ document.addEventListener("DOMContentLoaded", function () {
         return (anos * 12) + meses;
     }
 
+    // Salva o array atualizado no localStorage
     function salvarLocalStorage() {
         localStorage.setItem("fruteiras", JSON.stringify(fruteiras));
     }
 
+    // Cria visualmente um card para cada fruteira
     function criarCard(fruteira) {
 
         const idadeMeses = calcularIdadeEmMeses(fruteira.dataPlantio);
@@ -52,43 +57,48 @@ document.addEventListener("DOMContentLoaded", function () {
         lista.appendChild(col);
     }
 
+    // Atualiza a tela com todas as fruteiras salvas
     function carregarFruteiras() {
         lista.innerHTML = "";
         fruteiras.forEach(criarCard);
     }
 
+    // Evento de clique do botão salvar
     botaoSalvar.addEventListener("click", function (e) {
 
-        e.preventDefault(); // impede reload
+        e.preventDefault(); // Impede recarregar a página
 
         const nomePopular = document.getElementById("nomePopular").value;
         const nomeCientifico = document.getElementById("nomeCientifico").value;
         const producao = document.getElementById("producao").value;
         const dataPlantio = document.getElementById("dataPlantio").value;
 
+        // Validação básica dos campos
         if (!nomePopular || !nomeCientifico || !producao || !dataPlantio) {
             alert("Preencha todos os campos.");
             return;
         }
 
+        // Cria objeto representando a nova fruteira
         const novaFruteira = {
-            id: Date.now(),
+            id: Date.now(), // Gera ID único
             nomePopular,
             nomeCientifico,
             producao,
             dataPlantio
         };
 
-        fruteiras.push(novaFruteira);
-
-        salvarLocalStorage();
-
-        carregarFruteiras();
+        fruteiras.push(novaFruteira); // Adiciona ao array
+        salvarLocalStorage();         // Salva no navegador
+        carregarFruteiras();          // Atualiza a tela
 
         document.getElementById("formFruteira").reset();
-
-        console.log("SALVOU:", fruteiras);
     });
+
+    // Carrega as fruteiras salvas ao abrir a página
+    carregarFruteiras();
+
+});
 
     carregarFruteiras();
 
